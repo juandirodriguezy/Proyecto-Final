@@ -21,11 +21,10 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private List<string> availableModels =
     [
-        "gemini-2.5-pro",
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-1.5-pro",
-        "gemini-1.5-flash",
+        "gemini-3.5-flash",
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash",
+        "gemini-3.1-pro-preview",
         "openai/gpt-5.4-nano",
         "mistral/mistral-large"
     ];
@@ -35,6 +34,11 @@ public partial class SettingsViewModel : ObservableObject
     private bool isTestingConnection;
 
     public bool IsNotTestingConnection => !IsTestingConnection;
+
+    [ObservableProperty]
+    private bool isPasswordHidden = true;
+
+    public string VisibilityIcon => IsPasswordHidden ? "👁️" : "🙈";
 
     [ObservableProperty]
     private string diagnosticMessage = string.Empty;
@@ -49,12 +53,39 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Alterna la visualización de la clave en texto claro o enmascarada.
+    /// </summary>
+    [RelayCommand]
+    private async Task TogglePasswordVisibilityAsync()
+    {
+        IsPasswordHidden = !IsPasswordHidden;
+        OnPropertyChanged(nameof(VisibilityIcon));
+
+        // Si el usuario quiere ver la clave y actualmente está guardada y oculta
+        if (!IsPasswordHidden && HasSavedKey)
+        {
+            string? savedKey = await _apiKeyService.GetAsync();
+            if (!string.IsNullOrWhiteSpace(savedKey))
+            {
+                ApiKeyInput = savedKey;
+            }
+        }
+        else if (IsPasswordHidden && HasSavedKey)
+        {
+            ApiKeyInput = "••••••••••••••••••••";
+        }
+    }
+
+    /// <summary>
     /// Carga el estado inicial de la clave configurada al ingresar a la pantalla.
     /// </summary>
     [RelayCommand]
     public async Task InitializeAsync()
     {
         HasSavedKey = await _apiKeyService.HasKeyAsync();
+        IsPasswordHidden = true;
+        OnPropertyChanged(nameof(VisibilityIcon));
+
         if (HasSavedKey)
         {
             ApiKeyInput = "••••••••••••••••••••";

@@ -19,7 +19,7 @@ public class AiService
     public const string GeminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
     public const string PollinationsEndpoint = "https://gen.pollinations.ai/v1/chat/completions";
 
-    public const string DefaultModel = "gemini-2.5-pro"; // Modelo Pro insignia para Google AI Pro
+    public const string DefaultModel = "gemini-3.5-flash"; // Modelo activo y optimizado para Google Gemini
 
     public const string AcademicSystemPrompt =
         "Eres un asistente académico universitario de alto nivel impulsado por Google Gemini. " +
