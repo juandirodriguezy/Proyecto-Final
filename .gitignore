@@ -1,0 +1,34 @@
+## .NET and Visual Studio ignore rules
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.sln.docstates
+
+## .NET MAUI & Mobile
+.idea/
+*.apk
+*.aab
+*.msix
+*.appx
+*.appxbundle
+*.msixbundle
+*.cer
+*.pfx
+
+## OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
