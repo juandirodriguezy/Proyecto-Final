@@ -21,10 +21,13 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private List<string> availableModels =
     [
+        "gemini-2.5-pro",
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+        "gemini-1.5-pro",
+        "gemini-1.5-flash",
         "openai/gpt-5.4-nano",
-        "openai/gpt-4o-mini",
-        "mistral/mistral-large",
-        "anthropic/claude-3-haiku"
+        "mistral/mistral-large"
     ];
 
     [ObservableProperty]
@@ -55,13 +58,13 @@ public partial class SettingsViewModel : ObservableObject
         if (HasSavedKey)
         {
             ApiKeyInput = "••••••••••••••••••••";
-            DiagnosticMessage = "Clave de API configurada en SecureStorage.";
+            DiagnosticMessage = "Clave de API de Google Gemini configurada en SecureStorage.";
             DiagnosticColor = "#059669"; // Success
         }
         else
         {
             ApiKeyInput = string.Empty;
-            DiagnosticMessage = "No hay ninguna clave registrada. Configure su API Key para habilitar las consultas.";
+            DiagnosticMessage = "No hay ninguna clave registrada. Configure su API Key de Google Gemini (Google AI Pro) para habilitar las consultas.";
             DiagnosticColor = "#D97706"; // Warning
         }
     }
@@ -71,7 +74,7 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(ApiKeyInput) || ApiKeyInput.StartsWith("••••"))
         {
-            await Shell.Current.DisplayAlertAsync("Aviso", "Por favor ingrese una clave de API válida.", "Aceptar");
+            await Shell.Current.DisplayAlertAsync("Aviso", "Por favor ingrese una clave de API válida de Google Gemini.", "Aceptar");
             return;
         }
 
@@ -79,9 +82,9 @@ public partial class SettingsViewModel : ObservableObject
         {
             await _apiKeyService.SaveAsync(ApiKeyInput.Trim());
             HasSavedKey = true;
-            DiagnosticMessage = "Clave de API guardada exitosamente en el almacenamiento seguro (SecureStorage).";
+            DiagnosticMessage = "Clave de API de Google Gemini guardada exitosamente en el almacenamiento seguro (SecureStorage).";
             DiagnosticColor = "#059669";
-            await Shell.Current.DisplayAlertAsync("Éxito", "Clave de API guardada de forma segura.", "Aceptar");
+            await Shell.Current.DisplayAlertAsync("Éxito", "Clave de API de Google Gemini guardada de forma segura.", "Aceptar");
         }
         catch (Exception ex)
         {
@@ -96,7 +99,7 @@ public partial class SettingsViewModel : ObservableObject
     {
         bool confirm = await Shell.Current.DisplayAlertAsync(
             "Confirmación",
-            "¿Está seguro de que desea eliminar la clave de API del dispositivo?",
+            "¿Está seguro de que desea eliminar la clave de API de Google Gemini del dispositivo?",
             "Sí, eliminar",
             "Cancelar");
 
@@ -119,7 +122,7 @@ public partial class SettingsViewModel : ObservableObject
         if (IsTestingConnection) return;
 
         IsTestingConnection = true;
-        DiagnosticMessage = "Probando conexión con el servicio de IA...";
+        DiagnosticMessage = $"Probando conexión con {SelectedModel} (Google Gemini)...";
         DiagnosticColor = "#0284C7"; // Info
 
         try

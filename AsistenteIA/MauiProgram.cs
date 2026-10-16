@@ -15,10 +15,9 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
-		// Registro de servicios en el contenedor de dependencias (Fase 3)
+		// Registro de servicios en el contenedor de dependencias (Google Gemini / REST)
 		builder.Services.AddSingleton(new HttpClient
 		{
-			BaseAddress = new Uri("https://gen.pollinations.ai/v1/"),
 			Timeout = TimeSpan.FromSeconds(60)
 		});
 

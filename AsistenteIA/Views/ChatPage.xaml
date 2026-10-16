@@ -158,8 +158,8 @@
                 <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,Auto">
                         <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
-                            <Label Text="🤖" FontSize="16"/>
-                            <Label Text="Respuesta de la IA"
+                            <Label Text="✨" FontSize="16"/>
+                            <Label Text="Respuesta de Google Gemini"
                                    FontAttributes="Bold"
                                    FontSize="14"
                                    TextColor="{StaticResource Primary}"/>

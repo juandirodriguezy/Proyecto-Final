@@ -140,7 +140,7 @@ public partial class ChatViewModel : ObservableObject
         IsBusy = true;
         CanSave = false;
         Answer = string.Empty;
-        StatusMessage = "Enviando solicitud POST a la IA (esperando respuesta)...";
+        StatusMessage = $"Consultando a Google Gemini ({SelectedModel})...";
         StatusColor = "#0284C7"; // Info
 
         try

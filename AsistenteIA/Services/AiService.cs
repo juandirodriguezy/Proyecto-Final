@@ -8,24 +8,42 @@ using AsistenteIA.Models;
 namespace AsistenteIA.Services;
 
 /// <summary>
-/// Servicio para el consumo de la API REST de Inteligencia Artificial (Pollinations / OpenAI Compatible).
+/// Servicio para el consumo de la API REST de Inteligencia Artificial enfocado en Google Gemini (Google AI Pro)
+/// y compatible con endpoints OpenAI / Pollinations.
 /// </summary>
 public class AiService
 {
     private readonly HttpClient _client;
     private readonly ApiKeyService _keyService;
 
-    public const string DefaultModel = "openai/gpt-5.4-nano";
+    public const string GeminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+    public const string PollinationsEndpoint = "https://gen.pollinations.ai/v1/chat/completions";
+
+    public const string DefaultModel = "gemini-2.5-pro"; // Modelo Pro insignia para Google AI Pro
+
     public const string AcademicSystemPrompt =
-        "Eres un asistente académico universitario. Responde de forma clara, estructurada y pedagógica. " +
-        "Explica conceptos paso a paso, fomenta el pensamiento crítico y la comprensión. " +
-        "Si no tienes certeza absoluta sobre un dato o fuentes específicas, indícalo con transparencia y no inventes referencias.";
+        "Eres un asistente académico universitario de alto nivel impulsado por Google Gemini. " +
+        "Responde de forma clara, didáctica, estructurada y pedagógica. " +
+        "Explica conceptos paso a paso, fomenta el pensamiento crítico y la comprensión de algoritmos, código y bases de datos. " +
+        "Si no tienes certeza absoluta sobre un dato o fuentes específicas, indícalo con transparencia y no inventes referencias bibliográficas.";
 
     public AiService(HttpClient client, ApiKeyService keyService)
     {
         _client = client;
         _keyService = keyService;
     }
+
+    /// <summary>
+    /// Determina si un modelo pertenece a la familia Google Gemini.
+    /// </summary>
+    public static bool IsGeminiModel(string model) =>
+        model.StartsWith("gemini", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Retorna el endpoint REST correspondiente según el modelo seleccionado.
+    /// </summary>
+    public static string GetEndpointUrl(string model) =>
+        IsGeminiModel(model) ? GeminiEndpoint : PollinationsEndpoint;
 
     /// <summary>
     /// Envía una pregunta o instrucción académica al modelo de IA y devuelve la respuesta generada.
@@ -43,9 +61,10 @@ public class AiService
 
         string? apiKey = await _keyService.GetAsync();
         if (string.IsNullOrWhiteSpace(apiKey))
-            throw new InvalidOperationException("No se ha configurado la clave de API. Por favor, regístrela en la sección de Configuración.");
+            throw new InvalidOperationException("No se ha configurado la clave de API. Por favor, registre su API Key de Google Gemini en Configuración.");
 
         string selectedModel = string.IsNullOrWhiteSpace(model) ? DefaultModel : model;
+        string endpointUrl = GetEndpointUrl(selectedModel);
 
         var requestBody = new ChatRequest
         {
@@ -57,8 +76,15 @@ public class AiService
             ]
         };
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, "chat/completions");
+        using var request = new HttpRequestMessage(HttpMethod.Post, endpointUrl);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey.Trim());
+
+        // Para Google Gemini, agregamos también la cabecera nativa x-goog-api-key para compatibilidad total
+        if (IsGeminiModel(selectedModel))
+        {
+            request.Headers.TryAddWithoutValidation("x-goog-api-key", apiKey.Trim());
+        }
+
         request.Content = JsonContent.Create(requestBody);
 
         HttpResponseMessage response;
@@ -72,7 +98,7 @@ public class AiService
         }
         catch (HttpRequestException ex)
         {
-            throw new HttpRequestException($"Error de red al conectar con el servicio: {ex.Message}", ex);
+            throw new HttpRequestException($"Error de red al conectar con Google Gemini: {ex.Message}", ex);
         }
 
         if (!response.IsSuccessStatusCode)
@@ -86,11 +112,12 @@ public class AiService
 
             string friendlyMessage = response.StatusCode switch
             {
-                HttpStatusCode.Unauthorized => "Error 401: Clave de API no autorizada o inválida. Verifique en Configuración.",
-                HttpStatusCode.Forbidden => "Error 403: Acceso denegado al modelo seleccionado.",
-                HttpStatusCode.NotFound => "Error 404: Endpoint del servicio o modelo no encontrado.",
-                HttpStatusCode.TooManyRequests => "Error 429: Se ha superado la cuota de peticiones permitidas.",
-                HttpStatusCode.InternalServerError => "Error 500: Fallo interno en los servidores de la IA. Intente más tarde.",
+                HttpStatusCode.BadRequest => $"Error 400 (Parámetros inválidos o clave de Gemini no admitida): {errorContent}",
+                HttpStatusCode.Unauthorized => "Error 401: Clave de API de Google Gemini no autorizada o inválida. Verifíquela en Google AI Studio (aistudio.google.com).",
+                HttpStatusCode.Forbidden => "Error 403: Acceso restringido al modelo de Gemini seleccionado o permisos insuficientes en el proyecto de Google Cloud.",
+                HttpStatusCode.NotFound => $"Error 404: El modelo '{selectedModel}' no fue encontrado en la API de Google Gemini.",
+                HttpStatusCode.TooManyRequests => "Error 429: Cuota de peticiones excedida temporalmente. Espere unos momentos e intente nuevamente.",
+                HttpStatusCode.InternalServerError => "Error 500: Fallo interno en los servidores de Google Gemini. Intente más tarde.",
                 _ => $"Error del servicio ({response.StatusCode}): {errorContent}"
             };
 
@@ -104,12 +131,12 @@ public class AiService
         }
         catch (JsonException ex)
         {
-            throw new InvalidOperationException("La respuesta del servicio no tiene el formato JSON esperado.", ex);
+            throw new InvalidOperationException("La respuesta de Google Gemini no tiene el formato JSON esperado.", ex);
         }
 
         string? answer = result?.Choices.FirstOrDefault()?.Message.Content;
         return string.IsNullOrWhiteSpace(answer)
-            ? "El servicio de IA respondió correctamente, pero no devolvió contenido de texto."
+            ? "Google Gemini respondió correctamente, pero no devolvió contenido de texto."
             : answer.Trim();
     }
 
@@ -122,12 +149,13 @@ public class AiService
         if (string.IsNullOrWhiteSpace(apiKey))
             return (false, "No hay ninguna clave de API configurada en el dispositivo.", 0);
 
+        string testModel = string.IsNullOrWhiteSpace(model) ? DefaultModel : model;
         var stopwatch = Stopwatch.StartNew();
         try
         {
-            string result = await AskAsync("Hola, responde únicamente con la palabra 'OK'.", model, token);
+            string result = await AskAsync("Hola, responde únicamente con la palabra 'OK'.", testModel, token);
             stopwatch.Stop();
-            return (true, $"Conexión exitosa. El servicio respondió: '{result}'", stopwatch.ElapsedMilliseconds);
+            return (true, $"Conexión exitosa con {testModel} ({stopwatch.ElapsedMilliseconds} ms): '{result}'", stopwatch.ElapsedMilliseconds);
         }
         catch (OperationCanceledException)
         {

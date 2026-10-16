@@ -20,17 +20,17 @@
                     <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                         <Label Text="🎓" FontSize="32" VerticalOptions="Center"/>
                         <VerticalStackLayout>
-                            <Label Text="Asistente Académico IA"
+                            <Label Text="Asistente Académico con Google Gemini"
                                    TextColor="{StaticResource White}"
                                    FontSize="22"
                                    FontAttributes="Bold"/>
-                            <Label Text="Tecnología en Desarrollo de Software"
+                            <Label Text="Tecnología en Desarrollo de Software | Google AI Pro"
                                    TextColor="{StaticResource SecondaryLight}"
                                    FontSize="14"/>
                         </VerticalStackLayout>
                     </HorizontalStackLayout>
 
-                    <Label Text="Plataforma de asistencia educativa para resolución de dudas, optimización de código, análisis relacional y algoritmos con IA responsable."
+                    <Label Text="Plataforma de asistencia educativa potenciada por modelos Google Gemini (Gemini 2.5 Pro / Flash) para resolución de dudas, optimización de código, modelado relacional y análisis de complejidad algorítmica."
                            TextColor="{StaticResource White}"
                            FontSize="14"
                            LineHeight="1.2"
@@ -106,7 +106,7 @@
                                    FontSize="15"
                                    FontAttributes="Bold"
                                    TextColor="{StaticResource TextPrimary}"/>
-                            <Label Text="Administra tu API Key con SecureStorage y prueba la conexión."
+                            <Label Text="Administra tu API Key de Google Gemini con SecureStorage y prueba la conexión en vivo."
                                    FontSize="12"
                                    TextColor="{StaticResource TextSecondary}"/>
                         </VerticalStackLayout>

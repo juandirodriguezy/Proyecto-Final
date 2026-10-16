@@ -16,19 +16,22 @@
                    FontAttributes="Bold"
                    TextColor="{StaticResource TextPrimary}"/>
 
-            <!-- Tarjeta 1: Clave de API -->
+            <!-- Tarjeta 1: Clave de API de Google Gemini (Google AI Pro) -->
             <Border Stroke="{StaticResource BorderColor}"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 14"
                     BackgroundColor="{StaticResource Surface}"
                     Padding="16">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Clave de API de IA (Pollinations)"
-                           FontAttributes="Bold"
-                           FontSize="14"
-                           TextColor="{StaticResource TextPrimary}"/>
+                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Label Text="✨" FontSize="18"/>
+                        <Label Text="Clave de API de Google Gemini (Google AI Pro)"
+                               FontAttributes="Bold"
+                               FontSize="14"
+                               TextColor="{StaticResource TextPrimary}"/>
+                    </HorizontalStackLayout>
 
-                    <Label Text="La clave se almacena de forma encriptada en SecureStorage y nunca se muestra en texto plano."
+                    <Label Text="La clave se almacena de forma encriptada en SecureStorage y nunca se muestra en texto plano. Obtén tu clave en Google AI Studio (aistudio.google.com/apikey)."
                            FontSize="12"
                            TextColor="{StaticResource TextSecondary}"/>
 
@@ -39,7 +42,7 @@
                             BackgroundColor="{StaticResource CardBackground}"
                             Padding="8,2">
                         <Entry Text="{Binding ApiKeyInput}"
-                               Placeholder="Ingrese su API Key autorizada..."
+                               Placeholder="Ingrese su Gemini API Key (AIzaSy...)..."
                                IsPassword="True"
                                TextColor="{StaticResource TextPrimary}"
                                PlaceholderColor="{StaticResource TextMuted}"
@@ -78,7 +81,7 @@
                            FontSize="14"
                            TextColor="{StaticResource TextPrimary}"/>
 
-                    <Label Text="Seleccione el modelo para las consultas académicas:"
+                    <Label Text="Seleccione el modelo (los modelos 'gemini-2.5-pro' y 'gemini-2.5-flash' aprovechan al máximo tu suscripción Google AI Pro):"
                            FontSize="12"
                            TextColor="{StaticResource TextSecondary}"/>
 
@@ -94,7 +97,7 @@
                     </Border>
 
                     <!-- Botón de prueba de conexión diagnóstica -->
-                    <Button Text="Probar Conexión con IA"
+                    <Button Text="Probar Conexión con Gemini"
                             Command="{Binding TestConnectionCommand}"
                             BackgroundColor="{StaticResource Secondary}"
                             TextColor="{StaticResource White}"
@@ -129,13 +132,13 @@
                                FontSize="13"
                                TextColor="{StaticResource TextPrimary}"/>
                     </HorizontalStackLayout>
-                    <Label Text="• Sus credenciales nunca se transmiten a terceros ni se guardan en repositorios públicos."
+                    <Label Text="• Tus credenciales de Google Gemini se almacenan localmente en SecureStorage y se envían de forma cifrada mediante HTTPS."
                            FontSize="12"
                            TextColor="{StaticResource TextSecondary}"/>
-                    <Label Text="• Los modelos de lenguaje pueden generar respuestas inexactas o alucinaciones. Es responsabilidad del usuario contrastar la información."
+                    <Label Text="• Los modelos generativos pueden presentar alucinaciones. Es deber del estudiante contrastar las respuestas con fuentes académicas oficiales."
                            FontSize="12"
                            TextColor="{StaticResource TextSecondary}"/>
-                    <Label Text="• La aplicación no recopila telemetría de usuario ni almacena sus prompts fuera de su base de datos local SQLite."
+                    <Label Text="• No compartas contraseñas, tokens de producción ni datos personales sensibles en tus consultas."
                            FontSize="12"
                            TextColor="{StaticResource TextSecondary}"/>
                 </VerticalStackLayout>
@@ -169,6 +172,10 @@
                            FontSize="12"
                            FontAttributes="Bold"
                            TextColor="{StaticResource TextPrimary}"/>
+                    <Label Text="Motor de Inteligencia Artificial: Google Gemini (Google AI Pro / REST)"
+                           FontSize="11"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource SecondaryDark}"/>
                     <Label Text="Tecnologías: .NET MAUI 10, C# 13, MVVM, SQLite, REST API"
                            FontSize="11"
                            TextColor="{StaticResource TextSecondary}"/>
