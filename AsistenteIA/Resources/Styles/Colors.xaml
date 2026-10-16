@@ -1,37 +1,66 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
+    <!-- Paleta de colores armónica, accesible y de alto contraste (WCAG AA) para Asistente Académico -->
+    <Color x:Key="Primary">#1E3A8A</Color> <!-- Azul Marino Académico -->
+    <Color x:Key="PrimaryDark">#172554</Color>
+    <Color x:Key="PrimaryLight">#3B82F6</Color>
+    <Color x:Key="PrimaryDarkText">#FFFFFF</Color>
 
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="PrimaryDark">#ac99ea</Color>
-    <Color x:Key="PrimaryDarkText">#242424</Color>
-    <Color x:Key="Secondary">#DFD8F7</Color>
-    <Color x:Key="SecondaryDarkText">#9880e5</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    <Color x:Key="Secondary">#0D9488</Color> <!-- Verde Azulado / Teal -->
+    <Color x:Key="SecondaryDark">#115E59</Color>
+    <Color x:Key="SecondaryLight">#14B8A6</Color>
+    <Color x:Key="SecondaryDarkText">#FFFFFF</Color>
 
-    <Color x:Key="White">White</Color>
-    <Color x:Key="Black">Black</Color>
-    <Color x:Key="Magenta">#D600AA</Color>
-    <Color x:Key="MidnightBlue">#190649</Color>
-    <Color x:Key="OffBlack">#1f1f1f</Color>
+    <Color x:Key="Tertiary">#D97706</Color> <!-- Ámbar Académico -->
+    <Color x:Key="Accent">#2563EB</Color>
 
-    <Color x:Key="Gray100">#E1E1E1</Color>
-    <Color x:Key="Gray200">#C8C8C8</Color>
-    <Color x:Key="Gray300">#ACACAC</Color>
-    <Color x:Key="Gray400">#919191</Color>
-    <Color x:Key="Gray500">#6E6E6E</Color>
-    <Color x:Key="Gray600">#404040</Color>
-    <Color x:Key="Gray900">#212121</Color>
-    <Color x:Key="Gray950">#141414</Color>
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="OffBlack">#0F172A</Color>
+    <Color x:Key="Surface">#FFFFFF</Color>
+    <Color x:Key="CardBackground">#F8FAFC</Color>
+    <Color x:Key="PageBackground">#F1F5F9</Color>
 
+    <!-- Estados semánticos -->
+    <Color x:Key="Success">#059669</Color> <!-- Verde éxito / Verificado -->
+    <Color x:Key="Danger">#DC2626</Color>  <!-- Rojo alerta / Cancelar / Eliminar -->
+    <Color x:Key="Warning">#D97706</Color> <!-- Ámbar advertencia / Pendiente -->
+    <Color x:Key="Info">#0284C7</Color>
+
+    <!-- Escala de Grises / Texto de alto contraste -->
+    <Color x:Key="TextPrimary">#0F172A</Color>   <!-- Slate 900 (Ratio > 12:1 sobre fondo claro) -->
+    <Color x:Key="TextSecondary">#475569</Color> <!-- Slate 600 (Ratio > 5:1 sobre fondo claro) -->
+    <Color x:Key="TextMuted">#64748B</Color>
+    <Color x:Key="BorderColor">#CBD5E1</Color>
+
+    <Color x:Key="Gray100">#F1F5F9</Color>
+    <Color x:Key="Gray200">#E2E8F0</Color>
+    <Color x:Key="Gray300">#CBD5E1</Color>
+    <Color x:Key="Gray400">#94A3B8</Color>
+    <Color x:Key="Gray500">#64748B</Color>
+    <Color x:Key="Gray600">#475569</Color>
+    <Color x:Key="Gray900">#0F172A</Color>
+    <Color x:Key="Gray950">#020617</Color>
+
+    <!-- Pinceles de colores (Brushes) -->
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource PrimaryDark}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
     <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
     <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource Surface}"/>
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackground}"/>
+    <SolidColorBrush x:Key="PageBackgroundBrush" Color="{StaticResource PageBackground}"/>
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource Success}"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource Danger}"/>
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource Warning}"/>
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimary}"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondary}"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
 
     <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
     <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>

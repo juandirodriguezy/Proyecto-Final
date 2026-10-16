@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AsistenteIA.ViewModels"
+             x:Class="AsistenteIA.Views.DetailPage"
+             x:DataType="vm:DetailViewModel"
+             Title="Detalle de Consulta"
+             BackgroundColor="{StaticResource PageBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="16">
+
+            <!-- Barra Superior de Navegación y Acciones -->
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Button Grid.Column="0"
+                        Text="← Volver"
+                        Command="{Binding GoBackCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource Primary}"
+                        FontAttributes="Bold"
+                        Padding="0"/>
+
+                <Button Grid.Column="2"
+                        Text="🗑️ Eliminar"
+                        Command="{Binding DeleteCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource Danger}"
+                        FontAttributes="Bold"
+                        Padding="0"/>
+            </Grid>
+
+            <!-- Metadatos de la Consulta -->
+            <Border Stroke="{StaticResource BorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource Surface}"
+                    Padding="14">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="6">
+                    <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="8">
+                        <Label Text="Categoría:" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
+                        <Border BackgroundColor="{StaticResource PrimaryDark}"
+                                StrokeShape="RoundRectangle 6"
+                                Padding="8,2">
+                            <Label Text="{Binding Conversation.Category}"
+                                   FontSize="11"
+                                   TextColor="{StaticResource White}"
+                                   FontAttributes="Bold"/>
+                        </Border>
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Spacing="4">
+                        <Label Text="ID:" FontSize="12" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Text="{Binding Conversation.Id}" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}"/>
+                    </HorizontalStackLayout>
+
+                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                           Text="{Binding Conversation.FormattedDate, StringFormat='Registrado el: {0}'}"
+                           FontSize="12"
+                           TextColor="{StaticResource TextMuted}"/>
+                </Grid>
+            </Border>
+
+            <!-- Pregunta / Prompt Completo (RF06) -->
+            <Border Stroke="{StaticResource BorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource Surface}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Consulta o Instrucción Formulada"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"/>
+                    <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
+                    <Label Text="{Binding Conversation.Prompt}"
+                           FontSize="14"
+                           TextColor="{StaticResource TextPrimary}"
+                           LineHeight="1.3"
+                           LineBreakMode="WordWrap"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Respuesta Completa de la IA -->
+            <Border Stroke="{StaticResource BorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource Surface}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Respuesta Generada por IA"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource SecondaryDark}"/>
+                    <BoxView HeightRequest="1" Color="{StaticResource BorderColor}"/>
+                    <Label Text="{Binding Conversation.Answer}"
+                           FontSize="14"
+                           TextColor="{StaticResource TextPrimary}"
+                           LineHeight="1.3"
+                           LineBreakMode="WordWrap"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sección de Validación y Control Ético (Fase 10 / Fase 12) -->
+            <Border Stroke="{Binding VerificationBadgeColor}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource Surface}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Control de Veracidad y Uso Responsable"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <Border BackgroundColor="{StaticResource CardBackground}"
+                            Stroke="{Binding VerificationBadgeColor}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="10,6">
+                        <Label Text="{Binding VerificationBadgeText}"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="{Binding VerificationBadgeColor}"
+                               HorizontalOptions="Center"/>
+                    </Border>
+
+                    <Label Text="De acuerdo con los principios éticos de la asignatura, marque como verificada esta respuesta sólo tras contrastar su exactitud con fuentes bibliográficas y documentación oficial."
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"
+                           LineHeight="1.2"/>
+
+                    <Button Text="{Binding IsVerified, Converter={x:Null}, StringFormat='Alternar Verificación'}"
+                            Command="{Binding ToggleVerificationCommand}"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="{StaticResource White}"
+                            FontAttributes="Bold"
+                            CornerRadius="8"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

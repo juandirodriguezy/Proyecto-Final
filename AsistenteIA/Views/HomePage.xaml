@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AsistenteIA.ViewModels"
+             x:Class="AsistenteIA.Views.HomePage"
+             x:DataType="vm:HomeViewModel"
+             Title="Inicio"
+             BackgroundColor="{StaticResource PageBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <!-- Hero Banner Académico -->
+            <Border Stroke="{StaticResource BorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="{StaticResource Primary}"
+                    Padding="24">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                        <Label Text="🎓" FontSize="32" VerticalOptions="Center"/>
+                        <VerticalStackLayout>
+                            <Label Text="Asistente Académico IA"
+                                   TextColor="{StaticResource White}"
+                                   FontSize="22"
+                                   FontAttributes="Bold"/>
+                            <Label Text="Tecnología en Desarrollo de Software"
+                                   TextColor="{StaticResource SecondaryLight}"
+                                   FontSize="14"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <Label Text="Plataforma de asistencia educativa para resolución de dudas, optimización de código, análisis relacional y algoritmos con IA responsable."
+                           TextColor="{StaticResource White}"
+                           FontSize="14"
+                           LineHeight="1.2"
+                           Opacity="0.95"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sección de Accesos Rápidos -->
+            <Label Text="Acciones Rápidas"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"/>
+
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                <!-- Tarjeta 1: Consultar IA -->
+                <Border Grid.Row="0" Grid.Column="0"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{StaticResource Surface}"
+                        Padding="16">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToChatCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="💬" FontSize="26"/>
+                        <Label Text="Consultar IA"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"/>
+                        <Label Text="Pregunta o utiliza plantillas académicas."
+                               FontSize="12"
+                               TextColor="{StaticResource TextSecondary}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Tarjeta 2: Historial -->
+                <Border Grid.Row="0" Grid.Column="1"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{StaticResource Surface}"
+                        Padding="16">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToHistoryCommand}"/>
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="📚" FontSize="26"/>
+                        <Label Text="Historial"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource SecondaryDark}"/>
+                        <Label Text="Revisa tus consultas guardadas en SQLite."
+                               FontSize="12"
+                               TextColor="{StaticResource TextSecondary}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Tarjeta 3: Configuración y Clave -->
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                        Stroke="{StaticResource BorderColor}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{StaticResource Surface}"
+                        Padding="16">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToSettingsCommand}"/>
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0" Text="⚙️" FontSize="26" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                            <Label Text="Configuración y Credenciales"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}"/>
+                            <Label Text="Administra tu API Key con SecureStorage y prueba la conexión."
+                                   FontSize="12"
+                                   TextColor="{StaticResource TextSecondary}"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="→" FontSize="20" TextColor="{StaticResource TextSecondary}" VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Decálogo de Uso Ético y Responsable -->
+            <Border Stroke="{StaticResource Warning}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="⚠️" FontSize="18"/>
+                        <Label Text="Decálogo de Uso Ético y Académico"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}"/>
+                    </HorizontalStackLayout>
+                    <Label Text="• La IA es una herramienta complementaria: valida siempre sus respuestas con libros y documentación oficial."
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"/>
+                    <Label Text="• Marca las respuestas como 'Verificadas' únicamente tras contrastarlas con fuentes confiables."
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"/>
+                    <Label Text="• No compartas contraseñas, datos personales ni información confidencial en tus preguntas."
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

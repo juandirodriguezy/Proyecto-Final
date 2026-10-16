@@ -3,12 +3,42 @@
     x:Class="AsistenteIA.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:AsistenteIA"
-    Title="AsistenteIA">
+    xmlns:views="clr-namespace:AsistenteIA.Views"
+    Title="AsistenteIA"
+    Shell.BackgroundColor="{StaticResource Primary}"
+    Shell.ForegroundColor="{StaticResource White}"
+    Shell.TitleColor="{StaticResource White}"
+    Shell.UnselectedColor="{StaticResource Gray400}">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- Navegación por Pestañas Inferiores (TabBar) -->
+    <TabBar>
+        <Tab Title="Inicio">
+            <ShellContent
+                Title="Inicio"
+                ContentTemplate="{DataTemplate views:HomePage}"
+                Route="HomePage" />
+        </Tab>
+
+        <Tab Title="Consultar IA">
+            <ShellContent
+                Title="Consultar IA"
+                ContentTemplate="{DataTemplate views:ChatPage}"
+                Route="ChatPage" />
+        </Tab>
+
+        <Tab Title="Historial">
+            <ShellContent
+                Title="Historial"
+                ContentTemplate="{DataTemplate views:HistoryPage}"
+                Route="HistoryPage" />
+        </Tab>
+
+        <Tab Title="Configuración">
+            <ShellContent
+                Title="Configuración"
+                ContentTemplate="{DataTemplate views:SettingsPage}"
+                Route="SettingsPage" />
+        </Tab>
+    </TabBar>
 
 </Shell>

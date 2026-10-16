@@ -1,0 +1,26 @@
+using AsistenteIA.ViewModels;
+
+namespace AsistenteIA.Views;
+
+public partial class HistoryPage : ContentPage
+{
+    private readonly HistoryViewModel _viewModel;
+
+    public HistoryPage(HistoryViewModel viewModel)
+    {
+        InitializeComponent();
+        _viewModel = viewModel;
+        BindingContext = viewModel;
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _viewModel.LoadConversationsAsync();
+    }
+
+    private async void OnCategoryChanged(object? sender, EventArgs e)
+    {
+        await _viewModel.LoadConversationsAsync();
+    }
+}

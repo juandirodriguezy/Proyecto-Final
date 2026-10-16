@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AsistenteIA.ViewModels"
+             x:Class="AsistenteIA.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Configuración y Acerca de"
+             BackgroundColor="{StaticResource PageBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="18" Padding="20">
+
+            <!-- Encabezado de la Sección -->
+            <Label Text="Administración de Credenciales y Servicio"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"/>
+
+            <!-- Tarjeta 1: Clave de API -->
+            <Border Stroke="{StaticResource BorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    BackgroundColor="{StaticResource Surface}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Clave de API de IA (Pollinations)"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <Label Text="La clave se almacena de forma encriptada en SecureStorage y nunca se muestra en texto plano."
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"/>
+
+                    <!-- Campo con IsPassword="True" para máxima seguridad (RF08) -->
+                    <Border Stroke="{StaticResource BorderColor}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            BackgroundColor="{StaticResource CardBackground}"
+                            Padding="8,2">
+                        <Entry Text="{Binding ApiKeyInput}"
+                               Placeholder="Ingrese su API Key autorizada..."
+                               IsPassword="True"
+                               TextColor="{StaticResource TextPrimary}"
+                               PlaceholderColor="{StaticResource TextMuted}"
+                               FontSize="14"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Grid.Column="0"
+                                Text="Guardar Clave"
+                                Command="{Binding SaveApiKeyCommand}"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="{StaticResource White}"
+                                FontAttributes="Bold"
+                                CornerRadius="8"/>
+
+                        <Button Grid.Column="1"
+                                Text="Eliminar Clave"
+                                Command="{Binding DeleteApiKeyCommand}"
+                                BackgroundColor="{StaticResource Danger}"
+                                TextColor="{StaticResource White}"
+                                CornerRadius="8"
+                                IsEnabled="{Binding HasSavedKey}"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Tarjeta 2: Selección de Modelo y Diagnóstico de Red -->
+            <Border Stroke="{StaticResource BorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    BackgroundColor="{StaticResource Surface}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Modelo de IA y Diagnóstico de Conexión"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="{StaticResource TextPrimary}"/>
+
+                    <Label Text="Seleccione el modelo para las consultas académicas:"
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"/>
+
+                    <Border Stroke="{StaticResource BorderColor}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            BackgroundColor="{StaticResource CardBackground}"
+                            Padding="10,0">
+                        <Picker ItemsSource="{Binding AvailableModels}"
+                                SelectedItem="{Binding SelectedModel}"
+                                TextColor="{StaticResource TextPrimary}"
+                                Title="Seleccionar Modelo"/>
+                    </Border>
+
+                    <!-- Botón de prueba de conexión diagnóstica -->
+                    <Button Text="Probar Conexión con IA"
+                            Command="{Binding TestConnectionCommand}"
+                            BackgroundColor="{StaticResource Secondary}"
+                            TextColor="{StaticResource White}"
+                            FontAttributes="Bold"
+                            CornerRadius="8"
+                            IsEnabled="{Binding IsNotTestingConnection}"/>
+
+                    <ActivityIndicator IsRunning="{Binding IsTestingConnection}"
+                                       IsVisible="{Binding IsTestingConnection}"
+                                       Color="{StaticResource Secondary}"
+                                       HorizontalOptions="Center"/>
+
+                    <!-- Mensaje de diagnóstico dinámico -->
+                    <Label Text="{Binding DiagnosticMessage}"
+                           TextColor="{Binding DiagnosticColor}"
+                           FontSize="12"
+                           LineBreakMode="WordWrap"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Tarjeta 3: Declaración de Privacidad y Ética (RF09) -->
+            <Border Stroke="{StaticResource BorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    BackgroundColor="{StaticResource CardBackground}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="🔒" FontSize="16"/>
+                        <Label Text="Política de Privacidad y Mitigación de Alucinaciones"
+                               FontAttributes="Bold"
+                               FontSize="13"
+                               TextColor="{StaticResource TextPrimary}"/>
+                    </HorizontalStackLayout>
+                    <Label Text="• Sus credenciales nunca se transmiten a terceros ni se guardan en repositorios públicos."
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"/>
+                    <Label Text="• Los modelos de lenguaje pueden generar respuestas inexactas o alucinaciones. Es responsabilidad del usuario contrastar la información."
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"/>
+                    <Label Text="• La aplicación no recopila telemetría de usuario ni almacena sus prompts fuera de su base de datos local SQLite."
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Tarjeta 4: Sección Acerca de (RF09) -->
+            <Border Stroke="{StaticResource BorderColor}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    BackgroundColor="{StaticResource Surface}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Acerca del Asistente Académico Móvil"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="{StaticResource Primary}"/>
+                    
+                    <Label Text="Institución: Universidad de San Buenaventura"
+                           FontSize="12"
+                           TextColor="{StaticResource TextPrimary}"/>
+                    <Label Text="Programa: Tecnología en Desarrollo de Software"
+                           FontSize="12"
+                           TextColor="{StaticResource TextPrimary}"/>
+                    <Label Text="Asignatura: Programación Avanzada y Aplicada | VI Semestre"
+                           FontSize="12"
+                           TextColor="{StaticResource TextPrimary}"/>
+                    <Label Text="Docente: Mg. Sandra Esperanza Sánchez Barragán"
+                           FontSize="12"
+                           TextColor="{StaticResource TextSecondary}"/>
+                    <Label Text="Estudiante / Desarrollador: Juan Rodríguez"
+                           FontSize="12"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}"/>
+                    <Label Text="Tecnologías: .NET MAUI 10, C# 13, MVVM, SQLite, REST API"
+                           FontSize="11"
+                           TextColor="{StaticResource TextSecondary}"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
