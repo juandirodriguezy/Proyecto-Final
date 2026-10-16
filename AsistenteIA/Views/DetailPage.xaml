@@ -129,7 +129,7 @@
                            TextColor="{StaticResource TextSecondary}"
                            LineHeight="1.2"/>
 
-                    <Button Text="{Binding IsVerified, Converter={x:Null}, StringFormat='Alternar Verificación'}"
+                    <Button Text="Alternar Estado de Verificación"
                             Command="{Binding ToggleVerificationCommand}"
                             BackgroundColor="{StaticResource Primary}"
                             TextColor="{StaticResource White}"
