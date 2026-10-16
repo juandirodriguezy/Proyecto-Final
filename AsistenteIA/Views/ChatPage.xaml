@@ -156,25 +156,31 @@
                     Padding="16"
                     IsVisible="{Binding HasAnswer}">
                 <VerticalStackLayout Spacing="12">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
-                            <Label Text="✨" FontSize="16"/>
-                            <Label Text="Respuesta de Google Gemini"
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Grid Grid.Column="0" ColumnDefinitions="Auto,*" ColumnSpacing="6" VerticalOptions="Center">
+                            <Label Grid.Column="0" Text="✨" FontSize="16" VerticalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="Respuesta de Gemini"
                                    FontAttributes="Bold"
-                                   FontSize="14"
-                                   TextColor="{StaticResource Primary}"/>
-                        </HorizontalStackLayout>
+                                   FontSize="13"
+                                   TextColor="{StaticResource Primary}"
+                                   VerticalOptions="Center"
+                                   LineBreakMode="TailTruncation"/>
+                        </Grid>
 
                         <Border Grid.Column="1"
                                 Stroke="{StaticResource Warning}"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 6"
                                 BackgroundColor="{StaticResource CardBackground}"
-                                Padding="8,4">
+                                Padding="6,3"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End">
                             <Label Text="Verificar fuentes"
                                    FontSize="10"
                                    TextColor="{StaticResource Warning}"
-                                   FontAttributes="Bold"/>
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"/>
                         </Border>
                     </Grid>
 

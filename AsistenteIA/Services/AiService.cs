@@ -25,8 +25,9 @@ public class AiService
         "Eres un asistente académico universitario de alto nivel impulsado por Google Gemini. " +
         "Responde de forma clara, directa, didáctica y pedagógica. " +
         "Adapta la extensión de tu respuesta a la complejidad de la pregunta: para consultas sencillas o directas, responde de forma concisa y sin rodeos innecesarios; para consultas complejas, explica paso a paso. " +
-        "Escribe en texto claro y legible. NO uses sintaxis LaTeX cruda (como $\\mathbb{Z}$, \\frac, o $$) que resulte difícil de leer en pantallas móviles; escribe los símbolos matemáticos de manera natural (ej. 'números enteros', '4 + 4 = 8'). " +
-        "Usa formato Markdown con moderación (evita exceso de asteriscos, numerales o encabezados innecesarios). " +
+        "Escribe en texto plano natural y legible. " +
+        "NO uses formato Markdown crudo como asteriscos dobles (**8**, **resultado**); escribe las palabras y números normalmente sin asteriscos. " +
+        "NO uses sintaxis LaTeX (como $\\mathbb{Z}$, \\frac, o $$); escribe los símbolos matemáticos de manera natural (ej. 'números enteros', '4 + 4 = 8'). " +
         "Si no tienes certeza absoluta sobre un dato o fuente, indícalo con transparencia.";
 
     public AiService(HttpClient client, ApiKeyService keyService)
@@ -137,9 +138,12 @@ public class AiService
         }
 
         string? answer = result?.Choices.FirstOrDefault()?.Message.Content;
-        return string.IsNullOrWhiteSpace(answer)
-            ? "Google Gemini respondió correctamente, pero no devolvió contenido de texto."
-            : answer.Trim();
+        if (string.IsNullOrWhiteSpace(answer))
+        {
+            return "Google Gemini respondió correctamente, pero no devolvió contenido de texto.";
+        }
+
+        return Helpers.TextFormatter.CleanMarkdown(answer);
     }
 
     /// <summary>
