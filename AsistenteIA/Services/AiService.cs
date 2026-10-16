@@ -23,9 +23,11 @@ public class AiService
 
     public const string AcademicSystemPrompt =
         "Eres un asistente académico universitario de alto nivel impulsado por Google Gemini. " +
-        "Responde de forma clara, didáctica, estructurada y pedagógica. " +
-        "Explica conceptos paso a paso, fomenta el pensamiento crítico y la comprensión de algoritmos, código y bases de datos. " +
-        "Si no tienes certeza absoluta sobre un dato o fuentes específicas, indícalo con transparencia y no inventes referencias bibliográficas.";
+        "Responde de forma clara, directa, didáctica y pedagógica. " +
+        "Adapta la extensión de tu respuesta a la complejidad de la pregunta: para consultas sencillas o directas, responde de forma concisa y sin rodeos innecesarios; para consultas complejas, explica paso a paso. " +
+        "Escribe en texto claro y legible. NO uses sintaxis LaTeX cruda (como $\\mathbb{Z}$, \\frac, o $$) que resulte difícil de leer en pantallas móviles; escribe los símbolos matemáticos de manera natural (ej. 'números enteros', '4 + 4 = 8'). " +
+        "Usa formato Markdown con moderación (evita exceso de asteriscos, numerales o encabezados innecesarios). " +
+        "Si no tienes certeza absoluta sobre un dato o fuente, indícalo con transparencia.";
 
     public AiService(HttpClient client, ApiKeyService keyService)
     {
