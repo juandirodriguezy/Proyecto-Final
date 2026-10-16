@@ -37,7 +37,6 @@
                 <Picker ItemsSource="{Binding FilterCategories}"
                         SelectedItem="{Binding SelectedCategory}"
                         TextColor="{StaticResource TextPrimary}"
-                        SelectedIndexChanged="OnCategoryChanged"
                         FontSize="13"/>
             </Border>
         </Grid>
@@ -151,12 +150,8 @@
                                             Stroke="{StaticResource Warning}"
                                             StrokeThickness="1"
                                             StrokeShape="RoundRectangle 6"
-                                            Padding="6,2">
-                                        <Border.Triggers>
-                                            <DataTrigger TargetType="Border" Binding="{Binding IsVerified}" Value="True">
-                                                <Setter Property="IsVisible" Value="False" />
-                                            </DataTrigger>
-                                        </Border.Triggers>
+                                            Padding="6,2"
+                                            IsVisible="{Binding IsPendingVerification}">
                                         <Label Text="⚠️ Pendiente de verificar"
                                                FontSize="10"
                                                TextColor="{StaticResource Warning}"/>

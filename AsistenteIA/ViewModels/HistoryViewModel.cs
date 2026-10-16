@@ -19,6 +19,11 @@ public partial class HistoryViewModel : ObservableObject
     [ObservableProperty]
     private string selectedCategory = "Todas";
 
+    partial void OnSelectedCategoryChanged(string value)
+    {
+        _ = LoadConversationsAsync();
+    }
+
     [ObservableProperty]
     private bool isLoading;
 

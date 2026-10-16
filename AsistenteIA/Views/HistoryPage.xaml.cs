@@ -18,9 +18,4 @@ public partial class HistoryPage : ContentPage
         base.OnAppearing();
         await _viewModel.LoadConversationsAsync();
     }
-
-    private async void OnCategoryChanged(object? sender, EventArgs e)
-    {
-        await _viewModel.LoadConversationsAsync();
-    }
 }

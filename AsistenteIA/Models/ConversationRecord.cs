@@ -27,6 +27,9 @@ public class ConversationRecord
     public bool IsVerified { get; set; }
 
     [Ignore]
+    public bool IsPendingVerification => !IsVerified;
+
+    [Ignore]
     public string FormattedDate => CreatedAt.ToLocalTime().ToString("g");
 
     [Ignore]
