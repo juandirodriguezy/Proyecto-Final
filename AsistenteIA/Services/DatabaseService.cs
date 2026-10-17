@@ -13,8 +13,20 @@ public class DatabaseService
     private readonly string _databasePath;
 
     public DatabaseService()
+#if TEST_BUILD
+        : this(Path.Combine(Path.GetTempPath(), "asistente.db3"))
+#else
+        : this(Path.Combine(FileSystem.AppDataDirectory, "asistente.db3"))
+#endif
     {
-        _databasePath = Path.Combine(FileSystem.AppDataDirectory, "asistente.db3");
+    }
+
+    /// <summary>
+    /// Constructor alternativo para pruebas unitarias con ruta de archivo SQLite personalizada o temporal.
+    /// </summary>
+    public DatabaseService(string customDatabasePath)
+    {
+        _databasePath = customDatabasePath ?? throw new ArgumentNullException(nameof(customDatabasePath));
     }
 
     /// <summary>
@@ -135,5 +147,25 @@ public class DatabaseService
     {
         await InitAsync();
         return await _database!.DeleteAsync<ConversationRecord>(id);
+    }
+
+    /// <summary>
+    /// Cierra la conexión SQLite activa (especialmente útil para pruebas unitarias).
+    /// </summary>
+    public async Task CloseAsync()
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            if (_database is not null)
+            {
+                await _database.CloseAsync();
+                _database = null;
+            }
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
     }
 }

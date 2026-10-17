@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <DefineConstants>$(DefineConstants);TEST_BUILD</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.9.141" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\AsistenteIA\Helpers\TextFormatter.cs" Link="Helpers\TextFormatter.cs" />
+    <Compile Include="..\AsistenteIA\Helpers\PromptValidator.cs" Link="Helpers\PromptValidator.cs" />
+    <Compile Include="..\AsistenteIA\Models\ChatModels.cs" Link="Models\ChatModels.cs" />
+    <Compile Include="..\AsistenteIA\Models\ConversationRecord.cs" Link="Models\ConversationRecord.cs" />
+    <Compile Include="..\AsistenteIA\Services\DatabaseService.cs" Link="Services\DatabaseService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

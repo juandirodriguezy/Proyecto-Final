@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using AsistenteIA.Models;
 using AsistenteIA.Services;
+using AsistenteIA.Helpers;
 
 namespace AsistenteIA.ViewModels;
 
@@ -53,7 +54,7 @@ public partial class ChatViewModel : ObservableObject
 
     public string CharacterCountText => $"{Prompt?.Length ?? 0} / 2000 caracteres";
 
-    public bool IsPromptValid => (Prompt?.Trim().Length ?? 0) >= 5 && (Prompt?.Trim().Length ?? 0) <= 2000;
+    public bool IsPromptValid => PromptValidator.IsValid(Prompt);
 
     public List<AcademicTemplate> Templates { get; } =
     [
