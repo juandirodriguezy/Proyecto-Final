@@ -35,10 +35,9 @@ public partial class SettingsViewModel : ObservableObject
 
     public bool IsNotTestingConnection => !IsTestingConnection;
 
-    [ObservableProperty]
-    private bool isPasswordHidden = true;
-
-    public string VisibilityIcon => IsPasswordHidden ? "👁️" : "🙈";
+    public string ApiKeyPlaceholder => HasSavedKey
+        ? "•••••••••••••••• (Clave configurada)"
+        : "Pegue su clave de Google AI Studio";
 
     [ObservableProperty]
     private string diagnosticMessage = string.Empty;
@@ -53,48 +52,22 @@ public partial class SettingsViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Alterna la visualización de la clave en texto claro o enmascarada.
-    /// </summary>
-    [RelayCommand]
-    private async Task TogglePasswordVisibilityAsync()
-    {
-        IsPasswordHidden = !IsPasswordHidden;
-        OnPropertyChanged(nameof(VisibilityIcon));
-
-        // Si el usuario quiere ver la clave y actualmente está guardada y oculta
-        if (!IsPasswordHidden && HasSavedKey)
-        {
-            string? savedKey = await _apiKeyService.GetAsync();
-            if (!string.IsNullOrWhiteSpace(savedKey))
-            {
-                ApiKeyInput = savedKey;
-            }
-        }
-        else if (IsPasswordHidden && HasSavedKey)
-        {
-            ApiKeyInput = "••••••••••••••••••••";
-        }
-    }
-
-    /// <summary>
     /// Carga el estado inicial de la clave configurada al ingresar a la pantalla.
     /// </summary>
     [RelayCommand]
     public async Task InitializeAsync()
     {
         HasSavedKey = await _apiKeyService.HasKeyAsync();
-        IsPasswordHidden = true;
-        OnPropertyChanged(nameof(VisibilityIcon));
+        ApiKeyInput = string.Empty;
+        OnPropertyChanged(nameof(ApiKeyPlaceholder));
 
         if (HasSavedKey)
         {
-            ApiKeyInput = "••••••••••••••••••••";
             DiagnosticMessage = "Clave de API de Google Gemini configurada en SecureStorage.";
             DiagnosticColor = "#059669"; // Success
         }
         else
         {
-            ApiKeyInput = string.Empty;
             DiagnosticMessage = "No hay ninguna clave registrada. Configure su API Key de Google Gemini (Google AI Pro) para habilitar las consultas.";
             DiagnosticColor = "#D97706"; // Warning
         }
@@ -103,7 +76,7 @@ public partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task SaveApiKeyAsync()
     {
-        if (string.IsNullOrWhiteSpace(ApiKeyInput) || ApiKeyInput.StartsWith("••••"))
+        if (string.IsNullOrWhiteSpace(ApiKeyInput))
         {
             await Shell.Current.DisplayAlertAsync("Aviso", "Por favor ingrese una clave de API válida de Google Gemini.", "Aceptar");
             return;
@@ -113,6 +86,8 @@ public partial class SettingsViewModel : ObservableObject
         {
             await _apiKeyService.SaveAsync(ApiKeyInput.Trim());
             HasSavedKey = true;
+            ApiKeyInput = string.Empty;
+            OnPropertyChanged(nameof(ApiKeyPlaceholder));
             DiagnosticMessage = "Clave de API de Google Gemini guardada exitosamente en el almacenamiento seguro (SecureStorage).";
             DiagnosticColor = "#059669";
             await Shell.Current.DisplayAlertAsync("Éxito", "Clave de API de Google Gemini guardada de forma segura.", "Aceptar");
@@ -141,6 +116,7 @@ public partial class SettingsViewModel : ObservableObject
         {
             HasSavedKey = false;
             ApiKeyInput = string.Empty;
+            OnPropertyChanged(nameof(ApiKeyPlaceholder));
             DiagnosticMessage = "La clave ha sido eliminada del almacenamiento seguro.";
             DiagnosticColor = "#D97706";
             await Shell.Current.DisplayAlertAsync("Eliminada", "Clave eliminada correctamente.", "Aceptar");

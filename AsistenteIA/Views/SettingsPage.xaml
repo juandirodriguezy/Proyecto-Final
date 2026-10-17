@@ -39,27 +39,14 @@
                             StrokeThickness="1"
                             StrokeShape="RoundRectangle 8"
                             BackgroundColor="{StaticResource CardBackground}"
-                            Padding="8,2">
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
-                            <Entry Grid.Column="0"
-                                   Text="{Binding ApiKeyInput}"
-                                   Placeholder="Pegue su clave Gemini (AQ.Ab8...)"
-                                   IsPassword="{Binding IsPasswordHidden}"
-                                   TextColor="{StaticResource TextPrimary}"
-                                   PlaceholderColor="{StaticResource TextMuted}"
-                                   FontSize="13"
-                                   VerticalOptions="Center"/>
-                            <Button Grid.Column="1"
-                                    Text="{Binding VisibilityIcon}"
-                                    Command="{Binding TogglePasswordVisibilityCommand}"
-                                    BackgroundColor="Transparent"
-                                    TextColor="{StaticResource TextSecondary}"
-                                    FontSize="16"
-                                    Padding="4"
-                                    HeightRequest="36"
-                                    WidthRequest="40"
-                                    VerticalOptions="Center"/>
-                        </Grid>
+                            Padding="12,2">
+                        <Entry Text="{Binding ApiKeyInput}"
+                               Placeholder="{Binding ApiKeyPlaceholder}"
+                               IsPassword="True"
+                               TextColor="{StaticResource TextPrimary}"
+                               PlaceholderColor="{StaticResource TextMuted}"
+                               FontSize="13"
+                               VerticalOptions="Center"/>
                     </Border>
 
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
