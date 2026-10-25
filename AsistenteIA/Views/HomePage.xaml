@@ -14,21 +14,37 @@
             <Border Stroke="{StaticResource BorderColor}"
                     StrokeThickness="1"
                     StrokeShape="RoundRectangle 16"
-                    BackgroundColor="{StaticResource Primary}"
-                    Padding="24">
+                    BackgroundColor="{StaticResource Primary}">
+                <Border.Padding>
+                    <OnPlatform x:TypeArguments="Thickness">
+                        <On Platform="Android,iOS" Value="18" />
+                        <On Platform="WinUI,MacCatalyst" Value="24" />
+                    </OnPlatform>
+                </Border.Padding>
                 <VerticalStackLayout Spacing="10">
-                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                        <Label Text="🎓" FontSize="32" VerticalOptions="Center"/>
-                        <VerticalStackLayout>
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" VerticalOptions="Center">
+                        <Label Grid.Column="0"
+                               Text="🎓"
+                               FontSize="32"
+                               VerticalOptions="Start"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                             <Label Text="Asistente Académico con Google Gemini"
                                    TextColor="{StaticResource White}"
-                                   FontSize="22"
-                                   FontAttributes="Bold"/>
+                                   FontAttributes="Bold"
+                                   LineBreakMode="WordWrap">
+                                <Label.FontSize>
+                                    <OnPlatform x:TypeArguments="x:Double">
+                                        <On Platform="Android,iOS" Value="19" />
+                                        <On Platform="WinUI,MacCatalyst" Value="22" />
+                                    </OnPlatform>
+                                </Label.FontSize>
+                            </Label>
                             <Label Text="Tecnología en Desarrollo de Software | Google AI Pro"
                                    TextColor="{StaticResource SecondaryLight}"
-                                   FontSize="14"/>
+                                   FontSize="13"
+                                   LineBreakMode="WordWrap"/>
                         </VerticalStackLayout>
-                    </HorizontalStackLayout>
+                    </Grid>
 
                     <Label Text="Plataforma de asistencia educativa potenciada por modelos Google Gemini (Gemini 2.5 Pro / Flash) para resolución de dudas, optimización de código, modelado relacional y análisis de complejidad algorítmica."
                            TextColor="{StaticResource White}"
@@ -122,13 +138,14 @@
                     BackgroundColor="{StaticResource CardBackground}"
                     Padding="16">
                 <VerticalStackLayout Spacing="10">
-                    <HorizontalStackLayout Spacing="8">
-                        <Label Text="⚠️" FontSize="18"/>
-                        <Label Text="Decálogo de Uso Ético y Académico"
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="⚠️" FontSize="18" VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="Decálogo de Uso Ético y Académico"
                                FontSize="15"
                                FontAttributes="Bold"
-                               TextColor="{StaticResource TextPrimary}"/>
-                    </HorizontalStackLayout>
+                               TextColor="{StaticResource TextPrimary}"
+                               LineBreakMode="WordWrap"/>
+                    </Grid>
                     <Label Text="• La IA es una herramienta complementaria: valida siempre sus respuestas con libros y documentación oficial."
                            FontSize="12"
                            TextColor="{StaticResource TextSecondary}"/>
