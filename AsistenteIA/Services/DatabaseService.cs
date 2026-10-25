@@ -12,6 +12,18 @@ public class DatabaseService
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     private readonly string _databasePath;
 
+    static DatabaseService()
+    {
+        try
+        {
+            SQLitePCL.Batteries_V2.Init();
+        }
+        catch
+        {
+            // Ignorar si ya fue inicializado por MauiProgram o MainApplication
+        }
+    }
+
     public DatabaseService()
 #if TEST_BUILD
         : this(Path.Combine(Path.GetTempPath(), "asistente.db3"))
@@ -27,6 +39,14 @@ public class DatabaseService
     public DatabaseService(string customDatabasePath)
     {
         _databasePath = customDatabasePath ?? throw new ArgumentNullException(nameof(customDatabasePath));
+        try
+        {
+            SQLitePCL.Batteries_V2.Init();
+        }
+        catch
+        {
+            // Ignorar si ya fue inicializado
+        }
     }
 
     /// <summary>
@@ -47,6 +67,15 @@ public class DatabaseService
         {
             if (_database is null)
             {
+                try
+                {
+                    SQLitePCL.Batteries_V2.Init();
+                }
+                catch
+                {
+                    // Ignorar si ya fue inicializado
+                }
+
                 _database = new SQLiteAsyncConnection(_databasePath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.SharedCache);
                 await _database.CreateTableAsync<ConversationRecord>();
             }

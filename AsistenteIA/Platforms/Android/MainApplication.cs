@@ -1,4 +1,4 @@
-﻿using Android.App;
+using Android.App;
 using Android.Runtime;
 
 namespace AsistenteIA;
@@ -11,5 +11,10 @@ public class MainApplication : MauiApplication
 	{
 	}
 
-	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+	protected override MauiApp CreateMauiApp()
+	{
+		// Forzar inicialización temprana del proveedor nativo de SQLite para Android
+		SQLitePCL.Batteries_V2.Init();
+		return MauiProgram.CreateMauiApp();
+	}
 }

@@ -6,6 +6,9 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
+		// Inicialización explícita de SQLitePCLRaw antes de cualquier acceso a la base de datos
+		SQLitePCL.Batteries_V2.Init();
+
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
