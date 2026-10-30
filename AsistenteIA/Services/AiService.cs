@@ -8,8 +8,7 @@ using AsistenteIA.Models;
 namespace AsistenteIA.Services;
 
 /// <summary>
-/// Servicio para el consumo de la API REST de Inteligencia Artificial enfocado en Google Gemini (Google AI Pro)
-/// y compatible con endpoints OpenAI / Pollinations.
+/// Servicio para el consumo de la API REST de Inteligencia Artificial exclusivo para Google Gemini (Google AI Studio / Google AI Pro).
 /// </summary>
 public class AiService
 {
@@ -17,9 +16,8 @@ public class AiService
     private readonly ApiKeyService _keyService;
 
     public const string GeminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-    public const string PollinationsEndpoint = "https://gen.pollinations.ai/v1/chat/completions";
 
-    public const string DefaultModel = "gemini-3.5-flash"; // Modelo activo y optimizado para Google Gemini
+    public const string DefaultModel = "gemini-2.5-pro"; // Modelo activo y optimizado para Google Gemini
 
     public const string AcademicSystemPrompt =
         "Eres un asistente académico universitario de alto nivel impulsado por Google Gemini. " +
@@ -43,10 +41,9 @@ public class AiService
         model.StartsWith("gemini", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
-    /// Retorna el endpoint REST correspondiente según el modelo seleccionado.
+    /// Retorna el endpoint REST oficial de Google Gemini.
     /// </summary>
-    public static string GetEndpointUrl(string model) =>
-        IsGeminiModel(model) ? GeminiEndpoint : PollinationsEndpoint;
+    public static string GetEndpointUrl(string? model = null) => GeminiEndpoint;
 
     /// <summary>
     /// Envía una pregunta o instrucción académica al modelo de IA y devuelve la respuesta generada.

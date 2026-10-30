@@ -3,12 +3,12 @@ using System.Text.Json.Serialization;
 namespace AsistenteIA.Models;
 
 /// <summary>
-/// Modelo de solicitud para la API de chat completions (compatible con OpenAI).
+/// Modelo de solicitud para la API de chat completions de Google Gemini.
 /// </summary>
 public class ChatRequest
 {
     [JsonPropertyName("model")]
-    public string Model { get; set; } = "openai/gpt-5.4-nano";
+    public string Model { get; set; } = "gemini-2.5-pro";
 
     [JsonPropertyName("messages")]
     public List<ChatMessage> Messages { get; set; } = [];

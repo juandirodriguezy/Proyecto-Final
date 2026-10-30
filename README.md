@@ -4,7 +4,7 @@ Proyecto Final de **Programación Avanzada y Aplicada | VI Semestre**
 **Universidad de San Buenaventura - Bogotá**  
 **Docente:** Mg. Sandra Esperanza Sánchez Barragán  
 **Estudiante / Desarrollador:** Juan Rodríguez (`jdrodriguezy@academia.usbbog.edu.co`)  
-**Motor de IA:** Google Gemini (Gemini 2.5 Pro / Google AI Studio API) con soporte para endpoints compatibles con OpenAI.  
+**Motor de IA:** Google Gemini (Gemini 2.5 Pro y Gemini 2.5 Flash / Google AI Studio API).  
 **Tecnologías:** .NET MAUI 10, C# 13, XAML, MVVM (`CommunityToolkit.Mvvm`), SQLite (`sqlite-net-pcl`), xUnit, REST API.
 
 ---
@@ -123,7 +123,6 @@ dotnet test "AsistenteIA.Tests\AsistenteIA.Tests.csproj" --logger "console;verbo
   - `gemini-2.5-pro` (Modelo principal de razonamiento avanzado y precisión conceptual)
   - `gemini-2.5-flash` (Respuesta ultra rápida y bajo consumo)
   - `gemini-2.0-flash`, `gemini-1.5-pro`, `gemini-1.5-flash`
-  - Modelos compatibles adicionales para contingencia
 - **Herramienta de Diagnóstico en Vivo:** Botón *"Probar Conexión con Gemini"* que ejecuta una petición de verificación en tiempo real y reporta el estado operativo y la latencia en milisegundos.
 - Gestión de borrado seguro de credenciales con confirmación.
 - Declaración de privacidad y ficha técnica del proyecto.
