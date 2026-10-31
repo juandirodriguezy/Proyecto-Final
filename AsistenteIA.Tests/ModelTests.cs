@@ -10,12 +10,22 @@ namespace AsistenteIA.Tests;
 public class ModelTests
 {
     [Fact]
+    public void ChatRequest_DefaultModel_IsGemini38Flash()
+    {
+        // Arrange & Act
+        var request = new ChatRequest();
+
+        // Assert
+        Assert.Equal("gemini-3.8-flash", request.Model);
+    }
+
+    [Fact]
     public void ChatRequest_Serialization_IncludesModelAndMessages()
     {
         // Arrange
         var request = new ChatRequest
         {
-            Model = "gemini-2.5-pro",
+            Model = "gemini-3.8-flash",
             Messages =
             [
                 new ChatMessage { Role = "system", Content = "Eres un tutor académico." },
@@ -29,7 +39,7 @@ public class ModelTests
 
         // Assert
         Assert.NotNull(deserialized);
-        Assert.Equal("gemini-2.5-pro", deserialized.Model);
+        Assert.Equal("gemini-3.8-flash", deserialized.Model);
         Assert.Equal(2, deserialized.Messages.Count);
         Assert.Equal("system", deserialized.Messages[0].Role);
         Assert.Equal("¿Qué es una clave primaria en SQL?", deserialized.Messages[1].Content);
@@ -42,7 +52,7 @@ public class ModelTests
         var json = """
         {
             "id": "chatcmpl-12345",
-            "model": "gemini-2.5-pro",
+            "model": "gemini-3.8-flash",
             "choices": [
                 {
                     "index": 0,
@@ -62,7 +72,7 @@ public class ModelTests
         // Assert
         Assert.NotNull(response);
         Assert.Equal("chatcmpl-12345", response.Id);
-        Assert.Equal("gemini-2.5-pro", response.Model);
+        Assert.Equal("gemini-3.8-flash", response.Model);
         Assert.Single(response.Choices);
         Assert.Equal("assistant", response.Choices[0].Message.Role);
         Assert.Equal("Una clave primaria identifica unívocamente cada fila.", response.Choices[0].Message.Content);

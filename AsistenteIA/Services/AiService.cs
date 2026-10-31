@@ -17,7 +17,18 @@ public class AiService
 
     public const string GeminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 
-    public const string DefaultModel = "gemini-2.5-pro"; // Modelo activo y optimizado para Google Gemini
+    public const string DefaultModel = "gemini-3.8-flash"; // Modelo activo insignia y optimizado para Google Gemini
+
+    /// <summary>
+    /// Modelos oficiales y activos de Google Gemini disponibles en la API de Google AI Studio.
+    /// </summary>
+    public static readonly string[] ActiveGeminiModels =
+    [
+        "gemini-3.8-flash",
+        "gemini-3.5-flash-lite",
+        "gemini-3.6-flash",
+        "gemini-3.1-pro-preview"
+    ];
 
     public const string AcademicSystemPrompt =
         "Eres un asistente académico universitario de alto nivel impulsado por Google Gemini. " +
@@ -64,6 +75,14 @@ public class AiService
             throw new InvalidOperationException("No se ha configurado la clave de API. Por favor, registre su API Key de Google Gemini en Configuración.");
 
         string selectedModel = string.IsNullOrWhiteSpace(model) ? DefaultModel : model;
+
+        // Si el modelo solicitado ya no está disponible en la API de Google Gemini, usar DefaultModel
+        if (!ActiveGeminiModels.Contains(selectedModel))
+        {
+            selectedModel = DefaultModel;
+            try { Preferences.Default.Set("selected_model", DefaultModel); } catch { }
+        }
+
         string endpointUrl = GetEndpointUrl(selectedModel);
 
         var requestBody = new ChatRequest
@@ -103,6 +122,15 @@ public class AiService
 
         if (!response.IsSuccessStatusCode)
         {
+            // Si el error es 404 (modelo no encontrado en Google Gemini) y el modelo seleccionado no era el por defecto,
+            // reintentar automáticamente con DefaultModel para recuperarse sin interrumpir al usuario
+            if (response.StatusCode == HttpStatusCode.NotFound &&
+                !string.Equals(selectedModel, DefaultModel, StringComparison.OrdinalIgnoreCase))
+            {
+                try { Preferences.Default.Set("selected_model", DefaultModel); } catch { }
+                return await AskAsync(cleanPrompt, DefaultModel, token);
+            }
+
             string errorContent = string.Empty;
             try
             {
@@ -153,6 +181,12 @@ public class AiService
             return (false, "No hay ninguna clave de API configurada en el dispositivo.", 0);
 
         string testModel = string.IsNullOrWhiteSpace(model) ? DefaultModel : model;
+        if (!ActiveGeminiModels.Contains(testModel))
+        {
+            testModel = DefaultModel;
+            try { Preferences.Default.Set("selected_model", DefaultModel); } catch { }
+        }
+
         var stopwatch = Stopwatch.StartNew();
         try
         {

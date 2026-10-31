@@ -47,7 +47,21 @@ public partial class ChatViewModel : ObservableObject
     private bool canSave;
 
     [ObservableProperty]
-    private string selectedModel = AiService.DefaultModel;
+    private string selectedModel = Preferences.Default.Get("selected_model", AiService.DefaultModel);
+
+    /// <summary>
+    /// Sincroniza el modelo seleccionado con las preferencias del dispositivo.
+    /// </summary>
+    public void RefreshSelectedModel()
+    {
+        string saved = Preferences.Default.Get("selected_model", AiService.DefaultModel);
+        if (!AiService.ActiveGeminiModels.Contains(saved))
+        {
+            saved = AiService.DefaultModel;
+            Preferences.Default.Set("selected_model", saved);
+        }
+        SelectedModel = saved;
+    }
 
     [ObservableProperty]
     private string selectedCategory = "Código";
@@ -117,6 +131,8 @@ public partial class ChatViewModel : ObservableObject
     private async Task AskAsync()
     {
         if (IsBusy) return;
+
+        RefreshSelectedModel();
 
         string cleanPrompt = (Prompt ?? string.Empty).Trim();
 

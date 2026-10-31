@@ -8,7 +8,7 @@ namespace AsistenteIA.Models;
 public class ChatRequest
 {
     [JsonPropertyName("model")]
-    public string Model { get; set; } = "gemini-2.5-pro";
+    public string Model { get; set; } = "gemini-3.8-flash";
 
     [JsonPropertyName("messages")]
     public List<ChatMessage> Messages { get; set; } = [];

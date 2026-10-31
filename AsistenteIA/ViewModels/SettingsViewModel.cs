@@ -16,17 +16,24 @@ public partial class SettingsViewModel : ObservableObject
     private bool hasSavedKey;
 
     [ObservableProperty]
-    private string selectedModel = AiService.DefaultModel;
+    private string selectedModel = Preferences.Default.Get("selected_model", AiService.DefaultModel);
 
     [ObservableProperty]
     private List<string> availableModels =
     [
-        "gemini-2.5-pro",
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-1.5-pro",
-        "gemini-1.5-flash"
+        "gemini-3.8-flash",
+        "gemini-3.5-flash-lite",
+        "gemini-3.6-flash",
+        "gemini-3.1-pro-preview"
     ];
+
+    partial void OnSelectedModelChanged(string value)
+    {
+        if (!string.IsNullOrWhiteSpace(value) && AvailableModels.Contains(value))
+        {
+            Preferences.Default.Set("selected_model", value);
+        }
+    }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotTestingConnection))]
@@ -59,6 +66,14 @@ public partial class SettingsViewModel : ObservableObject
         HasSavedKey = await _apiKeyService.HasKeyAsync();
         ApiKeyInput = string.Empty;
         OnPropertyChanged(nameof(ApiKeyPlaceholder));
+
+        string savedModel = Preferences.Default.Get("selected_model", AiService.DefaultModel);
+        if (!AvailableModels.Contains(savedModel))
+        {
+            savedModel = AiService.DefaultModel;
+            Preferences.Default.Set("selected_model", savedModel);
+        }
+        SelectedModel = savedModel;
 
         if (HasSavedKey)
         {
