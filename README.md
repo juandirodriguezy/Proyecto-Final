@@ -147,7 +147,7 @@ dotnet test "AsistenteIA.Tests\AsistenteIA.Tests.csproj" --logger "console;verbo
 - **Cero Credenciales en Código:** No existen API Keys quemadas en el repositorio. Todo acceso a servicios externos utiliza `SecureStorage` con encriptación nativa de plataforma (Android Keystore / Windows DPAPI).
 - **Control Ético del Estudiante:** Sistema de verificación obligatorio que distingue visualmente entre respuestas contrastadas y respuestas pendientes de revisión crítica.
 - **Minimización de Datos:** La aplicación no recopila información personal, telemetría ni credenciales del usuario; toda la persistencia es estrictamente local en SQLite.
-- **Resiliencia Operativa:** Manejo robusto de errores de red (HTTP 400, 401, 403, 404, 429, 500, 503 con alta demanda), extracción limpia de mensajes de error sin volcado JSON crudo, fallback automático a `gemini-3.5-flash-lite` y soporte de cancelación manual.
+- **Resiliencia Operativa:** Manejo robusto de errores de red (HTTP 400, 401, 403, 404, 429, 500, 503 con alta demanda), extracción limpia de mensajes de error sin volcado JSON crudo, reintento no intrusivo con pausa de 1.5s (*backoff*) y respaldo a `gemini-3.5-flash-lite` preservando intactas las preferencias del usuario, mensajes contextualizados ante fallos dobles y soporte de cancelación manual.
 
 ---
 

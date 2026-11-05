@@ -65,7 +65,12 @@ public class AiService
     /// <summary>
     /// Envía una pregunta o instrucción académica al modelo de IA y devuelve la respuesta generada.
     /// </summary>
-    public async Task<string> AskAsync(string prompt, string? model = null, CancellationToken token = default, bool allowFallback = true)
+    public async Task<string> AskAsync(
+        string prompt,
+        string? model = null,
+        CancellationToken token = default,
+        bool allowFallback = true,
+        string? originalModel = null)
     {
         string cleanPrompt = (prompt ?? string.Empty).Trim();
 
@@ -129,13 +134,28 @@ public class AiService
         if (!response.IsSuccessStatusCode)
         {
             // Si el error es 404 (no encontrado) o 503 (servidor saturado por alta demanda) y allowFallback está activo,
-            // reintentar automáticamente con DefaultModel (gemini-3.5-flash-lite) para garantizar respuesta continua al estudiante
+            // realizar una pausa de 1.5s (backoff) y reintentar con DefaultModel (gemini-3.5-flash-lite),
+            // PRESERVANDO las preferencias del usuario intactas sin alterarlas
             if (allowFallback &&
                 (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.ServiceUnavailable) &&
                 !string.Equals(selectedModel, DefaultModel, StringComparison.OrdinalIgnoreCase))
             {
-                try { Preferences.Default.Set("selected_model", DefaultModel); } catch { }
-                return await AskAsync(cleanPrompt, DefaultModel, token, allowFallback: false);
+                // Pausa breve de 1.5s para permitir que la cola de inferencia de Google se libere
+                await Task.Delay(1500, token);
+
+                try
+                {
+                    return await AskAsync(cleanPrompt, DefaultModel, token, allowFallback: false, originalModel: selectedModel);
+                }
+                catch (HttpRequestException fallbackEx)
+                {
+                    // Si el reintento de respaldo también falla, reportar un mensaje contextualizado y transparente
+                    string failureSummary =
+                        $"El modelo seleccionado '{selectedModel}' no pudo responder (Error {(int)response.StatusCode}: {response.StatusCode}). " +
+                        $"Se intentó un reintento automático de respaldo con '{DefaultModel}', pero también falló: {fallbackEx.Message}";
+
+                    throw new HttpRequestException(failureSummary, fallbackEx, response.StatusCode);
+                }
             }
 
             string errorContent = string.Empty;
