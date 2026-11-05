@@ -46,7 +46,7 @@
                         </VerticalStackLayout>
                     </Grid>
 
-                    <Label Text="Plataforma de asistencia educativa potenciada por modelos Google Gemini (Gemini 3.8 Flash / Gemini 3.5 Flash-Lite) para resolución de dudas, optimización de código, modelado relacional y análisis de complejidad algorítmica."
+                    <Label Text="Plataforma de asistencia educativa potenciada por modelos Google Gemini (Gemini 3.5 Flash-Lite / Gemini 3.8 Flash) para resolución de dudas, optimización de código, modelado relacional y análisis de complejidad algorítmica."
                            TextColor="{StaticResource White}"
                            FontSize="14"
                            LineHeight="1.2"

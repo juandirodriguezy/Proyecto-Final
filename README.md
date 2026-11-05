@@ -4,7 +4,7 @@ Proyecto Final de **Programación Avanzada y Aplicada | VI Semestre**
 **Universidad de San Buenaventura - Bogotá**  
 **Docente:** Mg. Sandra Esperanza Sánchez Barragán  
 **Estudiante / Desarrollador:** Juan Rodríguez (`jdrodriguezy@academia.usbbog.edu.co`)  
-**Motor de IA:** Google Gemini (Gemini 3.8 Flash y Gemini 3.5 Flash-Lite / Google AI Studio API).  
+**Motor de IA:** Google Gemini (Gemini 3.5 Flash-Lite y Gemini 3.8 Flash / Google AI Studio API).  
 **Tecnologías:** .NET MAUI 10, C# 13, XAML, MVVM (`CommunityToolkit.Mvvm`), SQLite (`sqlite-net-pcl`), xUnit, REST API.
 
 ---
@@ -78,7 +78,7 @@ dotnet build "AsistenteIA\AsistenteIA.csproj" -f net10.0-android -r android-arm6
 
 ### Ejecución de la Suite de Pruebas Unitarias Automatizadas (Fase 11)
 
-El proyecto cuenta con **44 pruebas unitarias automatizadas** basadas en **xUnit** con un **100% de éxito (0 fallos)**:
+El proyecto cuenta con **51 pruebas unitarias automatizadas** basadas en **xUnit** con un **100% de éxito (0 fallos)**:
 
 ```powershell
 dotnet test "AsistenteIA.Tests\AsistenteIA.Tests.csproj" --logger "console;verbosity=normal"
@@ -89,7 +89,7 @@ dotnet test "AsistenteIA.Tests\AsistenteIA.Tests.csproj" --logger "console;verbo
 ## 📱 Módulos y Funcionalidades del Sistema
 
 ### 1. Inicio (`HomePage`)
-- Contextualización académica del asistente potenciado por modelos de lenguaje de vanguardia (**Gemini 3.8 Flash**).
+- Contextualización académica del asistente potenciado por modelos de lenguaje de vanguardia (**Gemini 3.5 Flash-Lite**).
 - Accesos directos a las tres áreas operativas: *Consultar IA*, *Historial* y *Configuración*.
 - **Decálogo de Ética y Pensamiento Crítico:** Guía interactiva permanente para orientar al estudiante sobre el rol complementario de la IA y la prevención de alucinaciones.
 
@@ -120,10 +120,10 @@ dotnet test "AsistenteIA.Tests\AsistenteIA.Tests.csproj" --logger "console;verbo
 ### 5. Configuración y Diagnóstico (`SettingsPage`)
 - **Gestión Segura de Credenciales:** Entrada protegida (`IsPassword="True"`) y almacenamiento seguro encriptado en el almacén del sistema operativo (`SecureStorage`), garantizando que la API Key nunca quede expuesta en código ni archivos de texto plano.
 - **Selector de Modelos Gemini:**
-  - `gemini-3.8-flash` (Modelo principal insignia, balance óptimo de velocidad, razonamiento y estabilidad)
-  - `gemini-3.5-flash-lite` (Modelo ultra rápido y eficiente)
+  - `gemini-3.5-flash-lite` (Modelo por defecto recomendado: máxima disponibilidad, cuota libre amplia y latencia ultra baja)
+  - `gemini-3.8-flash` (Modelo principal de alta capacidad multimodal y razonamiento)
   - `gemini-3.6-flash` (Generación de respuestas estable)
-  - `gemini-3.1-pro-preview` (Razonamiento profundo para análisis complejos)
+  - `gemini-3.1-pro-preview` (Razonamiento profundo para análisis complejos; requiere habilitar facturación en Google Cloud)
 - **Herramienta de Diagnóstico en Vivo:** Botón *"Probar Conexión con Gemini"* que ejecuta una petición de verificación en tiempo real y reporta el estado operativo y la latencia en milisegundos.
 - Gestión de borrado seguro de credenciales con confirmación.
 - Declaración de privacidad y ficha técnica del proyecto.
@@ -134,11 +134,11 @@ dotnet test "AsistenteIA.Tests\AsistenteIA.Tests.csproj" --logger "console;verbo
 
 | Suite de Prueba | Clase | Pruebas | Cobertura Funcional |
 |---|---|:---:|---|
-| **Limpieza y Formateo** | `TextFormatterTests` | 13 | Limpieza de negritas, cursivas, títulos, divisores, fórmulas LaTeX en bloque y en línea, símbolos matemáticos (`\mathbb{Z}`) y normalización de espaciado. |
+| **Limpieza y Formateo** | `TextFormatterTests` | 20 | Limpieza de negritas, cursivas, títulos, divisores, fórmulas LaTeX en bloque y en línea, símbolos matemáticos (`\mathbb{Z}`) y sanitización de mensajes de error de la API (extracción de texto plano desde JSON de error 503/429/etc.). |
 | **Validación de Prompts** | `PromptValidationTests` | 17 | Validación de límites inferior (5 caracteres) y superior (2000 caracteres), strings nulos/vacíos/espacios y mensajes de error orientativos (RF02 / P01). |
 | **Persistencia SQLite** | `DatabaseServiceTests` | 6 | Inserción con asignación de ID primario, ordenamiento cronológico descendente, búsqueda por texto/categoría, actualización de estado ético (`IsVerified`) y borrado. Pruebas aisladas en bases de datos temporales. |
-| **Modelos de Datos** | `ModelTests` | 8 | Serialización y deserialización JSON de `ChatRequest`/`ChatResponse`, modelo por defecto (`gemini-3.8-flash`), propiedades calculadas de `ConversationRecord` (`ShortPrompt`, `IsPendingVerification`, `FormattedDate`). |
-| **Total** | | **44** | **100% Exitosas (0 Fallos)** |
+| **Modelos de Datos** | `ModelTests` | 8 | Serialización y deserialización JSON de `ChatRequest`/`ChatResponse`, modelo por defecto (`gemini-3.5-flash-lite`), propiedades calculadas de `ConversationRecord` (`ShortPrompt`, `IsPendingVerification`, `FormattedDate`). |
+| **Total** | | **51** | **100% Exitosas (0 Fallos)** |
 
 ---
 
@@ -147,7 +147,7 @@ dotnet test "AsistenteIA.Tests\AsistenteIA.Tests.csproj" --logger "console;verbo
 - **Cero Credenciales en Código:** No existen API Keys quemadas en el repositorio. Todo acceso a servicios externos utiliza `SecureStorage` con encriptación nativa de plataforma (Android Keystore / Windows DPAPI).
 - **Control Ético del Estudiante:** Sistema de verificación obligatorio que distingue visualmente entre respuestas contrastadas y respuestas pendientes de revisión crítica.
 - **Minimización de Datos:** La aplicación no recopila información personal, telemetría ni credenciales del usuario; toda la persistencia es estrictamente local en SQLite.
-- **Resiliencia Operativa:** Manejo robusto de errores de red (HTTP 401, 403, 404, 429, 500, 503), timeouts de 60 segundos y soporte de cancelación manual.
+- **Resiliencia Operativa:** Manejo robusto de errores de red (HTTP 400, 401, 403, 404, 429, 500, 503 con alta demanda), extracción limpia de mensajes de error sin volcado JSON crudo, fallback automático a `gemini-3.5-flash-lite` y soporte de cancelación manual.
 
 ---
 

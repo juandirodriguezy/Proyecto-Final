@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace AsistenteIA.Helpers;
@@ -16,6 +17,52 @@ public static class TextFormatter
     private static readonly Regex LatexMathBlockRegex = new(@"\$\$(.+?)\$\$", RegexOptions.Singleline | RegexOptions.Compiled);
     private static readonly Regex LatexMathInlineRegex = new(@"\$(.+?)\$", RegexOptions.Compiled);
     private static readonly Regex MultipleLineBreaksRegex = new(@"\n{3,}", RegexOptions.Compiled);
+
+    /// <summary>
+    /// Extrae un mensaje legible en texto plano a partir de una respuesta de error de Google Gemini u otros servicios LLM,
+    /// admitiendo formatos JSON de objeto {"error": {"message": "..."}} o arreglo [{"error": {"message": "..."}}]
+    /// y texto plano, eliminando delimitadores y sintaxis JSON.
+    /// </summary>
+    public static string ExtractApiErrorMessage(string? errorContent)
+    {
+        if (string.IsNullOrWhiteSpace(errorContent))
+            return string.Empty;
+
+        string trimmed = errorContent.Trim();
+        try
+        {
+            using var doc = JsonDocument.Parse(trimmed);
+            var root = doc.RootElement;
+
+            if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() > 0)
+            {
+                root = root[0];
+            }
+
+            if (root.ValueKind == JsonValueKind.Object)
+            {
+                if (root.TryGetProperty("error", out var errorElement))
+                {
+                    if (errorElement.TryGetProperty("message", out var msgElement) &&
+                        !string.IsNullOrWhiteSpace(msgElement.GetString()))
+                    {
+                        return msgElement.GetString()!.Trim();
+                    }
+                }
+                else if (root.TryGetProperty("message", out var msgElement) &&
+                         !string.IsNullOrWhiteSpace(msgElement.GetString()))
+                {
+                    return msgElement.GetString()!.Trim();
+                }
+            }
+        }
+        catch (JsonException)
+        {
+            // No es JSON válido, se conserva el texto original recortado
+        }
+
+        return trimmed;
+    }
 
     /// <summary>
     /// Limpia el texto eliminando marcas de Markdown crudas (**negrita**, *cursiva*, ### títulos, etc.)

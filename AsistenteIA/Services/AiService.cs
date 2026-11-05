@@ -17,15 +17,15 @@ public class AiService
 
     public const string GeminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 
-    public const string DefaultModel = "gemini-3.8-flash"; // Modelo activo insignia y optimizado para Google Gemini
+    public const string DefaultModel = "gemini-3.5-flash-lite"; // Modelo activo, ultra rápido y de máxima disponibilidad
 
     /// <summary>
     /// Modelos oficiales y activos de Google Gemini disponibles en la API de Google AI Studio.
     /// </summary>
     public static readonly string[] ActiveGeminiModels =
     [
-        "gemini-3.8-flash",
         "gemini-3.5-flash-lite",
+        "gemini-3.8-flash",
         "gemini-3.6-flash",
         "gemini-3.1-pro-preview"
     ];
@@ -57,9 +57,15 @@ public class AiService
     public static string GetEndpointUrl(string? model = null) => GeminiEndpoint;
 
     /// <summary>
+    /// Extrae un mensaje legible en texto plano a partir de una respuesta de error de Google Gemini.
+    /// </summary>
+    public static string ExtractErrorMessage(string? errorContent) =>
+        Helpers.TextFormatter.ExtractApiErrorMessage(errorContent);
+
+    /// <summary>
     /// Envía una pregunta o instrucción académica al modelo de IA y devuelve la respuesta generada.
     /// </summary>
-    public async Task<string> AskAsync(string prompt, string? model = null, CancellationToken token = default)
+    public async Task<string> AskAsync(string prompt, string? model = null, CancellationToken token = default, bool allowFallback = true)
     {
         string cleanPrompt = (prompt ?? string.Empty).Trim();
 
@@ -122,13 +128,14 @@ public class AiService
 
         if (!response.IsSuccessStatusCode)
         {
-            // Si el error es 404 (modelo no encontrado en Google Gemini) y el modelo seleccionado no era el por defecto,
-            // reintentar automáticamente con DefaultModel para recuperarse sin interrumpir al usuario
-            if (response.StatusCode == HttpStatusCode.NotFound &&
+            // Si el error es 404 (no encontrado) o 503 (servidor saturado por alta demanda) y allowFallback está activo,
+            // reintentar automáticamente con DefaultModel (gemini-3.5-flash-lite) para garantizar respuesta continua al estudiante
+            if (allowFallback &&
+                (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.ServiceUnavailable) &&
                 !string.Equals(selectedModel, DefaultModel, StringComparison.OrdinalIgnoreCase))
             {
                 try { Preferences.Default.Set("selected_model", DefaultModel); } catch { }
-                return await AskAsync(cleanPrompt, DefaultModel, token);
+                return await AskAsync(cleanPrompt, DefaultModel, token, allowFallback: false);
             }
 
             string errorContent = string.Empty;
@@ -138,15 +145,36 @@ public class AiService
             }
             catch { }
 
+            string cleanError = ExtractErrorMessage(errorContent);
+
             string friendlyMessage = response.StatusCode switch
             {
-                HttpStatusCode.BadRequest => $"Error 400 (Parámetros inválidos o clave de Gemini no admitida): {errorContent}",
-                HttpStatusCode.Unauthorized => "Error 401: Clave de API de Google Gemini no autorizada o inválida. Verifíquela en Google AI Studio (aistudio.google.com).",
-                HttpStatusCode.Forbidden => "Error 403: Acceso restringido al modelo de Gemini seleccionado o permisos insuficientes en el proyecto de Google Cloud.",
-                HttpStatusCode.NotFound => $"Error 404: El modelo '{selectedModel}' no fue encontrado en la API de Google Gemini.",
-                HttpStatusCode.TooManyRequests => "Error 429: Cuota de peticiones excedida temporalmente. Espere unos momentos e intente nuevamente.",
-                HttpStatusCode.InternalServerError => "Error 500: Fallo interno en los servidores de Google Gemini. Intente más tarde.",
-                _ => $"Error del servicio ({response.StatusCode}): {errorContent}"
+                HttpStatusCode.BadRequest => string.IsNullOrWhiteSpace(cleanError)
+                    ? "Error 400: Parámetros inválidos o clave de Gemini no admitida."
+                    : $"Error 400 (Parámetros inválidos): {cleanError}",
+
+                HttpStatusCode.Unauthorized =>
+                    "Error 401: Clave de API de Google Gemini no autorizada o inválida. Verifíquela en Google AI Studio (aistudio.google.com).",
+
+                HttpStatusCode.Forbidden =>
+                    "Error 403: Acceso restringido al modelo de Gemini seleccionado o permisos insuficientes en el proyecto de Google Cloud.",
+
+                HttpStatusCode.NotFound =>
+                    $"Error 404: El modelo '{selectedModel}' no fue encontrado en la API de Google Gemini.",
+
+                HttpStatusCode.TooManyRequests => selectedModel.Contains("pro", StringComparison.OrdinalIgnoreCase)
+                    ? $"Error 429: Cuota de peticiones excedida. Los modelos Pro ('{selectedModel}') tienen un límite gratuito diario muy estricto en Google AI Studio (o requieren facturación activa en Google Cloud). Le recomendamos seleccionar 'gemini-3.5-flash-lite' en Configuración."
+                    : "Error 429: Cuota de peticiones excedida temporalmente. Espere unos momentos e intente nuevamente.",
+
+                HttpStatusCode.InternalServerError =>
+                    "Error 500: Fallo interno en los servidores de Google Gemini. Intente más tarde.",
+
+                HttpStatusCode.ServiceUnavailable =>
+                    $"Error 503: Los servidores de Google Gemini están experimentando alta demanda con el modelo '{selectedModel}'. {(string.IsNullOrWhiteSpace(cleanError) ? "Por favor intente nuevamente en unos instantes o seleccione 'gemini-3.5-flash-lite'." : cleanError)}",
+
+                _ => string.IsNullOrWhiteSpace(cleanError)
+                    ? $"Error del servicio ({(int)response.StatusCode} {response.StatusCode})"
+                    : $"Error del servicio ({(int)response.StatusCode}): {cleanError}"
             };
 
             throw new HttpRequestException(friendlyMessage, null, response.StatusCode);
@@ -190,7 +218,8 @@ public class AiService
         var stopwatch = Stopwatch.StartNew();
         try
         {
-            string result = await AskAsync("Hola, responde únicamente con la palabra 'OK'.", testModel, token);
+            // En pruebas diagnósticas, se deshabilita el fallback automático para evaluar con precisión el modelo exacto seleccionado
+            string result = await AskAsync("Hola, responde únicamente con la palabra 'OK'.", testModel, token, allowFallback: false);
             stopwatch.Stop();
             return (true, $"Conexión exitosa con {testModel} ({stopwatch.ElapsedMilliseconds} ms): '{result}'", stopwatch.ElapsedMilliseconds);
         }

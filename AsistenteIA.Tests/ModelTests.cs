@@ -10,13 +10,13 @@ namespace AsistenteIA.Tests;
 public class ModelTests
 {
     [Fact]
-    public void ChatRequest_DefaultModel_IsGemini38Flash()
+    public void ChatRequest_DefaultModel_IsGemini35FlashLite()
     {
         // Arrange & Act
         var request = new ChatRequest();
 
         // Assert
-        Assert.Equal("gemini-3.8-flash", request.Model);
+        Assert.Equal("gemini-3.5-flash-lite", request.Model);
     }
 
     [Fact]

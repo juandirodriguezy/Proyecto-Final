@@ -159,4 +159,90 @@ public class TextFormatterTests
         Assert.Contains("4 + 4 = 8", result);
         Assert.Contains("Demostración:", result);
     }
+
+    [Fact]
+    public void ExtractApiErrorMessage_WithArrayJsonError_ExtractsInnerMessage()
+    {
+        // Arrange: Exactamente el formato JSON de error 503 recibido por el usuario
+        var json = """
+        [
+          {
+            "error": {
+              "code": 503,
+              "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+              "status": "UNAVAILABLE"
+            }
+          }
+        ]
+        """;
+
+        // Act
+        var message = TextFormatter.ExtractApiErrorMessage(json);
+
+        // Assert
+        Assert.Equal("This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.", message);
+        Assert.DoesNotContain("{", message);
+        Assert.DoesNotContain("[", message);
+    }
+
+    [Fact]
+    public void ExtractApiErrorMessage_WithObjectJsonError_ExtractsInnerMessage()
+    {
+        // Arrange: Formato estándar de error 429 (Resource Exhausted)
+        var json = """
+        {
+          "error": {
+            "code": 429,
+            "message": "Resource has been exhausted (e.g. check quota).",
+            "status": "RESOURCE_EXHAUSTED"
+          }
+        }
+        """;
+
+        // Act
+        var message = TextFormatter.ExtractApiErrorMessage(json);
+
+        // Assert
+        Assert.Equal("Resource has been exhausted (e.g. check quota).", message);
+        Assert.DoesNotContain("{", message);
+    }
+
+    [Fact]
+    public void ExtractApiErrorMessage_WithPlainText_ReturnsTrimmedText()
+    {
+        // Arrange
+        var text = "  Error de conexión desconocido con el servidor remoto.  ";
+
+        // Act
+        var result = TextFormatter.ExtractApiErrorMessage(text);
+
+        // Assert
+        Assert.Equal("Error de conexión desconocido con el servidor remoto.", result);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   \t\n")]
+    public void ExtractApiErrorMessage_WithNullOrWhitespace_ReturnsEmpty(string? input)
+    {
+        // Act
+        var result = TextFormatter.ExtractApiErrorMessage(input);
+
+        // Assert
+        Assert.Equal(string.Empty, result);
+    }
+
+    [Fact]
+    public void ExtractApiErrorMessage_WithMalformedJson_ReturnsTrimmedTextWithoutCrashing()
+    {
+        // Arrange
+        var malformed = "{ error: incomplete json... ";
+
+        // Act
+        var result = TextFormatter.ExtractApiErrorMessage(malformed);
+
+        // Assert
+        Assert.Equal("{ error: incomplete json...", result);
+    }
 }
