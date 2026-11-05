@@ -4,7 +4,7 @@ Proyecto Final de **Programación Avanzada y Aplicada | VI Semestre**
 **Universidad de San Buenaventura - Bogotá**  
 **Docente:** Mg. Sandra Esperanza Sánchez Barragán  
 **Estudiante / Desarrollador:** Juan Rodríguez (`jdrodriguezy@academia.usbbog.edu.co`)  
-**Motor de IA:** Google Gemini (Gemini 3.5 Flash-Lite y Gemini 3.8 Flash / Google AI Studio API).  
+**Motor de IA:** Google Gemini (Gemini 3.5 Flash-Lite y Gemini 3.6 Flash / Google AI Studio API).  
 **Tecnologías:** .NET MAUI 10, C# 13, XAML, MVVM (`CommunityToolkit.Mvvm`), SQLite (`sqlite-net-pcl`), xUnit, REST API.
 
 ---
@@ -121,9 +121,7 @@ dotnet test "AsistenteIA.Tests\AsistenteIA.Tests.csproj" --logger "console;verbo
 - **Gestión Segura de Credenciales:** Entrada protegida (`IsPassword="True"`) y almacenamiento seguro encriptado en el almacén del sistema operativo (`SecureStorage`), garantizando que la API Key nunca quede expuesta en código ni archivos de texto plano.
 - **Selector de Modelos Gemini:**
   - `gemini-3.5-flash-lite` (Modelo por defecto recomendado: máxima disponibilidad, cuota libre amplia y latencia ultra baja)
-  - `gemini-3.8-flash` (Modelo principal de alta capacidad multimodal y razonamiento)
-  - `gemini-3.6-flash` (Generación de respuestas estable)
-  - `gemini-3.1-pro-preview` (Razonamiento profundo para análisis complejos; requiere habilitar facturación en Google Cloud)
+  - `gemini-3.6-flash` (Modelo de alta capacidad y razonamiento: respuestas académicas detalladas y explicaciones paso a paso)
 - **Herramienta de Diagnóstico en Vivo:** Botón *"Probar Conexión con Gemini"* que ejecuta una petición de verificación en tiempo real y reporta el estado operativo y la latencia en milisegundos.
 - Gestión de borrado seguro de credenciales con confirmación.
 - Declaración de privacidad y ficha técnica del proyecto.

@@ -81,7 +81,7 @@
                            FontSize="14"
                            TextColor="{StaticResource TextPrimary}"/>
 
-                    <Label Text="Seleccione el modelo de Google Gemini ('gemini-3.5-flash-lite' recomendado por alta disponibilidad, velocidad y cuota gratuita):"
+                    <Label Text="Seleccione el modelo de Google Gemini ('gemini-3.5-flash-lite' para máxima velocidad o 'gemini-3.6-flash' para respuestas detalladas):"
                            FontSize="12"
                            TextColor="{StaticResource TextSecondary}"/>
 
